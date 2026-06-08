@@ -1,21 +1,29 @@
 # SchedAI Pro — AI Scheduling & Booking Automation
 
-A modern, production-style SaaS frontend for AI-assisted scheduling, booking management, and meeting automation. SchedAI Pro brings together calendar booking, event-type configuration, lead routing, workflow automation, team management, and an AI scheduling co-pilot into a single, cohesive workspace inspired by Calendly-class scheduling platforms.
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Vite](https://img.shields.io/badge/Vite-646CFF?style=for-the-badge&logo=vite&logoColor=white)
+![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
+![Recharts](https://img.shields.io/badge/Recharts-22B5BF?style=for-the-badge&logo=chartdotjs&logoColor=white)
+![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=black)
+![License](https://img.shields.io/badge/License-Private-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Active-success?style=for-the-badge)
 
-> Product walkthrough: [Loom video demo](https://www.loom.com/share/8641b27ba4c649efbeb5d39c70c027f1)
+A modern, production-style SaaS frontend for AI-assisted scheduling, booking management, and meeting automation. SchedAI Pro unifies calendar booking, event-type configuration, lead routing, workflow automation, team management, analytics, and an AI scheduling co-pilot into a single, cohesive workspace inspired by Calendly-class scheduling platforms.
+
+Product walkthrough: [Loom video demo](https://www.loom.com/share/8641b27ba4c649efbeb5d39c70c027f1)
 
 ---
 
 ## Overview
 
-### Problem Solved
+### What Problem This Project Solves
 Revenue, hiring, and consulting teams lose hours every week coordinating meetings, sending reminders, chasing no-shows, and manually preparing for calls. SchedAI Pro consolidates the entire scheduling lifecycle — from public booking link to post-meeting follow-up — into one automated workspace, with an AI assistant that proposes times, drafts messages, and prepares meeting briefs before each call.
 
 ### Business Value
 - Reduces time-to-book and administrative overhead through one-click booking links and automated reminders.
 - Lowers no-show rates with reminder, recovery, and follow-up workflows.
 - Increases qualified pipeline by routing leads to the right host based on form responses.
-- Surfaces actionable performance insights (conversion, utilization, workflow throughput) for operational decision-making.
+- Surfaces actionable performance insights (conversion, utilization, workflow throughput) for operational decisions.
 
 ### Target Users
 - Sales and revenue teams running demos and discovery calls.
@@ -43,10 +51,10 @@ Revenue, hiring, and consulting teams lose hours every week coordinating meeting
 - Workspace settings for profile, branding, availability, security, and API keys.
 
 ### Advanced Features
-- Workflow automation engine with a Trigger → Condition → Action builder and a templated message editor supporting merge tags (`{{guest_name}}`, `{{event_name}}`, `{{host_name}}`, `{{meeting_time}}`).
-- Routing forms with a question builder and conditional routing rules (for example, company size, budget, and topic).
-- Analytics module with bookings-over-time and no-show-trend charts powered by Recharts.
+- Workflow automation engine with a Trigger to Condition to Action builder and a templated message editor supporting merge tags (`{{guest_name}}`, `{{event_name}}`, `{{host_name}}`, `{{meeting_time}}`).
+- Routing forms with a question builder and conditional routing rules (company size, budget, topic).
 - Status-aware UI components (badges, tables, metric cards) that adapt presentation to data state.
+- Reusable design-system primitives enabling rapid, consistent feature development.
 
 ### AI Features
 - AI Scheduling Assistant: a natural-language conversation surface to schedule, reschedule, draft follow-ups, and prepare for meetings.
@@ -60,20 +68,32 @@ Revenue, hiring, and consulting teams lose hours every week coordinating meeting
 - API key management with regeneration and two-factor authentication controls.
 - Integration connection management across connected and available apps.
 
+### Analytics Features
+- KPI cards for booking conversion, average time to book, no-show reduction, and workflow volume.
+- Bookings-over-time bar chart and no-show-trend line chart powered by Recharts.
+- Responsive, container-aware visualizations suitable for dashboards of any width.
+- Export-ready reporting surface for performance review.
+
+### Security Features
+- Separation of public and authenticated routes enforced at the routing layer.
+- Role-based access controls for workspace and team management.
+- Masked API keys with regeneration and two-factor authentication controls.
+- Form-driven input boundaries designed to pair with server-side validation.
+
 ---
 
 ## Architecture
 
 ### High-Level Architecture
-SchedAI Pro is a single-page application (SPA) built with React and Vite. It follows a layered, component-driven architecture: a routing/layout shell wraps feature pages, pages compose reusable presentation components, and all domain content is sourced through a centralized data layer that is structured to be swapped for live API services with minimal change.
+SchedAI Pro is a single-page application (SPA) built with React and Vite. It follows a layered, component-driven architecture: a routing and layout shell wraps feature pages, pages compose reusable presentation components, and all domain content flows through a centralized data layer that is structured to be swapped for live API services with minimal change.
 
 ```
 React SPA (Vite)
-  ├─ Routing & Layout Shell (react-router-dom)
-  ├─ Feature Pages (Dashboard, Bookings, Workflows, ...)
-  ├─ Reusable Components (MetricCard, DataTable, UI primitives)
-  ├─ Data / Service Layer (domain entities)
-  └─ Design System (global CSS tokens)
+  |-- Routing & Layout Shell (react-router-dom)
+  |-- Feature Pages (Dashboard, Bookings, Workflows, ...)
+  |-- Reusable Components (MetricCard, DataTable, UI primitives)
+  |-- Data / Service Layer (domain entities)
+  |-- Design System (global CSS tokens)
 ```
 
 ### Frontend Architecture
@@ -83,12 +103,12 @@ React SPA (Vite)
 - Presentational components are data-agnostic and receive content via props, keeping rendering logic decoupled from data sourcing.
 
 ### Backend Architecture
-This repository is the frontend reference implementation. The data layer (`src/data`) defines the canonical domain entities and acts as the seam for backend integration. Each entity collection maps cleanly to an intended REST resource, so the mock data module can be replaced by API client calls (fetch/axios) without changing component contracts. The design anticipates a stateless API tier exposing scheduling, booking, workflow, and analytics resources.
+This repository is the frontend reference implementation. The data layer (`src/data`) defines the canonical domain entities and acts as the seam for backend integration. Each entity collection maps cleanly to an intended REST resource, so the data module can be replaced by API client calls (fetch/axios) without changing component contracts. The design anticipates a stateless API tier exposing scheduling, booking, workflow, and analytics resources.
 
 ### Database Architecture
 The application models its domain through normalized entity collections — Bookings, Event Types, Workflows, Team Members, Integrations, Routing Rules, and Analytics series. These entities translate directly into relational tables with foreign-key relationships (for example, Bookings reference Event Types and Hosts), making the data model portable to PostgreSQL or any relational store.
 
-### Service Layer Design
+### Service Layer Architecture
 A thin utility layer (`src/lib`) provides cross-cutting helpers such as class-name composition (`cn` via `clsx`) and currency formatting (`Intl.NumberFormat`). This layer is the natural home for API clients, formatters, and shared business logic as the application grows, keeping pages and components focused on composition and presentation.
 
 ---
@@ -103,15 +123,16 @@ A thin utility layer (`src/lib`) provides cross-cutting helpers such as class-na
 | Animation | Framer Motion (dependency available for transitions) |
 | Charts / Data Viz | Recharts |
 | Date Handling | date-fns |
-| State Management | Zustand (dependency available for global state) |
-| Styling Utilities | clsx |
-| Data Layer | Centralized domain modules (`src/data`), backend-ready |
+| Backend | Stateless REST API tier (integration target via data-layer seam) |
+| Database | Relational model (PostgreSQL-compatible) derived from domain entities |
 | Authentication | Email/password and Google sign-in UI (integration-ready) |
+| State Management | Zustand (dependency available for global state) |
 | AI Services | AI assistant and suggestion UI (LLM integration-ready) |
-| Cloud / Integrations | Google Calendar, Outlook, Zoom, Google Meet, Slack, HubSpot, Salesforce, Stripe, Zapier (catalog) |
-| Build / DevOps | Vite build pipeline, npm scripts |
+| Cloud Services | Google Calendar, Outlook, Zoom, Google Meet, Slack, HubSpot, Salesforce, Stripe, Zapier (catalog) |
+| DevOps | Vite build pipeline, npm scripts, static/CDN deploy |
+| Monitoring | Error/performance monitoring integration point (for example Sentry) |
 
-> Note: Framer Motion, Zustand, authentication, and AI services are wired into the architecture and dependencies as integration points. The current build ships the full UI and interaction surface with a centralized data layer designed to connect to live services.
+Note: Framer Motion, Zustand, authentication, AI services, and monitoring are wired into the architecture and dependencies as integration points. The current build ships the full UI and interaction surface with a centralized data layer designed to connect to live services.
 
 ---
 
@@ -119,13 +140,17 @@ A thin utility layer (`src/lib`) provides cross-cutting helpers such as class-na
 
 ```
 User
-  ↓
+  |
+  v
 Frontend (React SPA + Router + UI components)
-  ↓
+  |
+  v
 API Layer (intended REST resources / data-layer seam)
-  ↓
+  |
+  v
 Business Logic (workflows, routing rules, AI suggestions)
-  ↓
+  |
+  v
 Database (relational entities: bookings, event types, workflows, team)
 ```
 
@@ -139,13 +164,11 @@ Database (relational entities: bookings, event types, workflows, team)
 
 ## Database Schema
 
-Key entities and relationships derived from the application's domain model:
-
 | Entity | Key Fields | Relationships |
 |--------|-----------|---------------|
 | Booking | guest, email, event, host, date, time, source, status | references Event Type, references Team Member (host) |
 | Event Type | name, duration, bookings count, active, link | has many Bookings |
-| Workflow | name, trigger, channel, status | may target Event Types / Bookings |
+| Workflow | name, trigger, channel, status | acts on Event Types / Bookings |
 | Team Member | name, role, calendar connected, meetings | hosts many Bookings |
 | Integration | name, connected | belongs to Workspace |
 | Routing Rule | condition, route | routes to Team Member / Event Type |
@@ -161,7 +184,7 @@ Relationship summary:
 
 ## API Documentation
 
-The following REST surface reflects the intended contract that the data layer is structured to fulfill. Each domain collection maps to a resource:
+The following REST surface reflects the intended contract that the data layer is structured to fulfill. Each domain collection maps to a resource.
 
 | Method | Endpoint | Purpose |
 |--------|----------|---------|
@@ -169,6 +192,7 @@ The following REST surface reflects the intended contract that the data layer is
 | GET | `/api/bookings` | List bookings (supports status filters) |
 | POST | `/api/bookings` | Create a new booking |
 | GET | `/api/bookings/:id` | Retrieve booking detail and AI prep brief |
+| PATCH | `/api/bookings/:id` | Update booking (reschedule, mark no-show) |
 | GET | `/api/event-types` | List event types |
 | POST | `/api/event-types` | Create or update an event type |
 | GET | `/api/workflows` | List automation workflows |
@@ -186,53 +210,63 @@ The following REST surface reflects the intended contract that the data layer is
 
 ```
 ai-scheduling-booking-automation/
-├─ index.html                  # App entry HTML
-├─ package.json                # Dependencies and scripts
-├─ README.md
-└─ src/
-   ├─ main.jsx                 # React root, Router bootstrap, global styles
-   ├─ App.jsx                  # Route definitions
-   ├─ layouts/
-   │  └─ AppLayout.jsx         # Sidebar navigation + content outlet
-   ├─ pages/                   # Feature screens (one per route)
-   │  ├─ Dashboard.jsx
-   │  ├─ EventTypes.jsx
-   │  ├─ Bookings.jsx
-   │  ├─ AIAssistant.jsx
-   │  ├─ Workflows.jsx
-   │  ├─ RoutingForms.jsx
-   │  ├─ Team.jsx
-   │  ├─ Analytics.jsx
-   │  ├─ Integrations.jsx
-   │  ├─ Settings.jsx
-   │  ├─ PublicBooking.jsx
-   │  └─ Auth.jsx
-   ├─ components/              # Reusable presentation components
-   │  ├─ PageHeader.jsx
-   │  ├─ MetricCard.jsx
-   │  ├─ DataTable.jsx
-   │  ├─ CalendarPreview.jsx
-   │  └─ ui/                   # Design-system primitives
-   │     ├─ Button.jsx
-   │     ├─ Card.jsx
-   │     └─ Badge.jsx
-   ├─ data/
-   │  └─ mockData.js           # Centralized domain entities (API-ready seam)
-   ├─ lib/
-   │  └─ utils.js              # Shared helpers (cn, currency)
-   ├─ styles/
-   │  └─ global.css            # Design tokens and component styles
-   ├─ scripts/
-   │  └─ backfill-history.mjs  # Repository history utility (Node CLI)
-   └─ Images/                  # Application screenshots
+|-- index.html                  # App entry HTML
+|-- package.json                # Dependencies and scripts
+|-- README.md
+'-- src/
+   |-- main.jsx                 # React root, Router bootstrap, global styles
+   |-- App.jsx                  # Route definitions
+   |-- layouts/
+   |  '-- AppLayout.jsx         # Sidebar navigation + content outlet
+   |-- pages/                   # Feature screens (one per route)
+   |  |-- Dashboard.jsx
+   |  |-- EventTypes.jsx
+   |  |-- Bookings.jsx
+   |  |-- AIAssistant.jsx
+   |  |-- Workflows.jsx
+   |  |-- RoutingForms.jsx
+   |  |-- Team.jsx
+   |  |-- Analytics.jsx
+   |  |-- Integrations.jsx
+   |  |-- Settings.jsx
+   |  |-- PublicBooking.jsx
+   |  '-- Auth.jsx
+   |-- components/              # Reusable presentation components
+   |  |-- PageHeader.jsx
+   |  |-- MetricCard.jsx
+   |  |-- DataTable.jsx
+   |  |-- CalendarPreview.jsx
+   |  '-- ui/                   # Design-system primitives
+   |     |-- Button.jsx
+   |     |-- Card.jsx
+   |     '-- Badge.jsx
+   |-- data/
+   |  '-- mockData.js           # Centralized domain entities (API-ready seam)
+   |-- lib/
+   |  '-- utils.js              # Shared helpers (cn, currency)
+   |-- styles/
+   |  '-- global.css            # Design tokens and component styles
+   |-- scripts/
+   |  '-- backfill-history.mjs  # Repository history utility (Node CLI)
+   '-- Images/                  # Application screenshots
 ```
+
+### Responsibilities
+- `layouts/` — application shell and persistent navigation.
+- `pages/` — route-level feature screens; orchestrate components and data.
+- `components/` — reusable, data-agnostic presentation building blocks.
+- `components/ui/` — atomic design-system primitives for consistency.
+- `data/` — canonical domain entities and the backend integration seam.
+- `lib/` — shared utilities and the future home for API clients and business logic.
+- `styles/` — global design tokens and component styling.
+- `scripts/` — operational tooling.
 
 ---
 
 ## Key Workflows
 
 ### Authentication Flow
-The user lands on the login screen (`/login`), which offers email/password and "Continue with Google" sign-in. On authentication, the user enters the workspace shell (`AppLayout`), which provides persistent sidebar navigation across all authenticated routes.
+The user lands on the login screen (`/login`), which offers email/password and Continue with Google sign-in. On authentication, the user enters the workspace shell (`AppLayout`), which provides persistent sidebar navigation across all authenticated routes.
 
 ### Main Business Workflow (Booking Lifecycle)
 1. A guest opens a public booking link (`/booking/demo`).
@@ -240,6 +274,9 @@ The user lands on the login screen (`/login`), which offers email/password and "
 3. The booking appears in Bookings with a status (Confirmed, Pending, Rescheduled, No-show).
 4. The host views the booking detail, including an AI-generated prep brief.
 5. Automation workflows fire reminders, follow-ups, or recovery messages based on lifecycle events.
+
+### Data Processing Workflow
+Raw booking and meeting records are aggregated into analytics series (daily bookings, no-shows) and KPI metrics (conversion, time-to-book, no-show reduction, workflow volume), then rendered through responsive charts and metric cards for operational reporting.
 
 ### Admin Workflow
 An Owner or Admin manages team membership and roles, connects integrations, configures workspace branding and availability, and administers API keys and two-factor authentication from Settings.
@@ -287,49 +324,79 @@ An Owner or Admin manages team membership and roles, connects integrations, conf
 - Authorization: role-based access model (Owner, Admin, Member, Viewer) for workspace and team controls.
 - Input Validation: structured forms across event types, routing forms, and settings provide the validation boundary; server-side validation is the intended enforcement point at the API tier.
 - Data Protection: API keys are masked in the UI and support regeneration; two-factor authentication is exposed as a workspace control.
-- Secure API Practices: the data-layer seam is designed for a stateless, authenticated API tier, keeping credentials and business logic off the client.
+- Secure API Design: the data-layer seam is designed for a stateless, authenticated API tier, keeping credentials and business logic off the client.
 
 ---
 
-## Performance & Scalability
+## Performance Optimizations
 
 - Caching: static assets are content-hashed by the Vite build for long-lived browser and CDN caching.
+- Query Optimization: the normalized entity model supports indexed lookups by host, event type, and status at the API/database tier.
 - Lazy Loading: route-based screens are structured for code-split, on-demand loading via React/Router lazy boundaries.
 - Code Splitting: Vite's Rollup-based bundling produces optimized, tree-shaken chunks per route and vendor library.
-- Async Processing: automation workflows (reminders, follow-ups, recovery) and AI suggestions are modeled as asynchronous, event-driven tasks suitable for background queue execution.
-- Scaling Strategy: the SPA is stateless and CDN-deployable; the intended API tier is horizontally scalable behind a load balancer, with the relational data model supporting read replicas and indexed query paths for booking and analytics workloads.
+- Background Jobs: reminders, follow-ups, and no-show recovery are modeled as background tasks suitable for queue-based execution.
+- Async Processing: AI suggestions and workflow actions are event-driven and non-blocking by design.
 
 ---
 
-## Installation & Setup
+## Scalability
+
+### 10,000 Users
+A stateless SPA served from a CDN handles frontend delivery with negligible marginal cost. A single API instance with connection pooling and a primary relational database comfortably supports this tier.
+
+### 100,000 Users
+Scale the API tier horizontally behind a load balancer, introduce read replicas for analytics and booking queries, add a caching layer (for example Redis) for hot reads, and move reminders, follow-ups, and AI tasks onto a background job queue with dedicated workers.
+
+### Enterprise Workloads
+Partition by workspace/tenant, adopt multi-region deployments with edge-cached static assets, separate read and write paths (CQRS-style) for analytics, scale workers independently per workload, and layer SSO/SAML, audit logging, and observability for enterprise compliance and reliability.
+
+---
+
+## Installation
 
 ### Prerequisites
 - Node.js 18 or later
 - npm 9 or later
 
-### Installation
+### Steps
 ```bash
+# 1. Clone the repository
+git clone https://github.com/hasnatmoham-ux/ai-scheduling-booking-automation.git
+
+# 2. Move into the project directory
+cd ai-scheduling-booking-automation
+
+# 3. Install dependencies
 npm install
+
+# 4. Start the development server
+npm run dev
 ```
 
-### Environment Variables
-The frontend runs with no required environment variables in its current configuration. When connecting live services, configure (using Vite's `VITE_` prefix):
+---
 
-```bash
-VITE_API_BASE_URL=https://api.yourdomain.com
-VITE_AI_API_KEY=your_ai_provider_key
-```
+## Environment Variables
 
-### Development Commands
-```bash
-npm run dev       # Start the Vite dev server with hot module replacement
-```
+The frontend runs with no required environment variables in its current configuration. When connecting live services, configure the following (Vite requires the `VITE_` prefix to expose variables to the client).
 
-### Production Build Commands
-```bash
-npm run build     # Produce an optimized production bundle in dist/
-npm run preview   # Preview the production build locally
-```
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `VITE_API_BASE_URL` | When backend is connected | Base URL of the REST API tier |
+| `VITE_AI_API_KEY` | When AI is connected | API key for the LLM/AI provider |
+| `VITE_GOOGLE_CLIENT_ID` | For Google sign-in | OAuth client ID for Google authentication |
+| `VITE_SENTRY_DSN` | Optional | DSN for error and performance monitoring |
+
+---
+
+## Local Development
+
+| Task | Command |
+|------|---------|
+| Installation | `npm install` |
+| Development | `npm run dev` |
+| Build | `npm run build` |
+| Testing | `npm test` (test runner to be configured) |
+| Production preview | `npm run preview` |
 
 ---
 
@@ -340,8 +407,15 @@ SchedAI Pro builds to a static, optimized bundle via `npm run build`, producing 
 Recommended deployment architecture:
 - Static frontend served from a global CDN for low-latency delivery.
 - Stateless API tier (the data-layer integration target) behind a load balancer.
-- Relational database (for example, PostgreSQL) for the domain entities, with read replicas for analytics.
+- Relational database (for example PostgreSQL) for the domain entities, with read replicas for analytics.
 - Background worker/queue for asynchronous workflow execution and AI tasks.
+
+Typical deployment flow:
+```bash
+npm install
+npm run build
+# deploy the generated dist/ directory to your static host or CDN
+```
 
 A Node-based repository utility (`src/scripts/backfill-history.mjs`) is included for managing structured git history and branch activity during project setup.
 
@@ -364,6 +438,6 @@ A Node-based repository utility (`src/scripts/backfill-history.mjs`) is included
 
 ## Why This Project Stands Out
 
-SchedAI Pro demonstrates senior-level frontend engineering through deliberate architectural decisions rather than incidental ones. The codebase enforces a clean separation of concerns — a routing/layout shell, data-agnostic presentation components, a dedicated UI primitives layer, and a centralized data module that doubles as a well-defined integration seam. This structure means swapping mock data for live API calls requires changes in one layer, not across every screen, which is the hallmark of a maintainable, scalable system.
+SchedAI Pro demonstrates senior-level engineering through deliberate architectural decisions rather than incidental ones. The codebase enforces a clean separation of concerns — a routing and layout shell, data-agnostic presentation components, a dedicated UI primitives layer, and a centralized data module that doubles as a well-defined integration seam. This structure means swapping mock data for live API calls requires changes in one layer, not across every screen, which is the hallmark of a maintainable, scalable system.
 
-The design system is consistent and token-driven, components are reusable and composable, and the domain model is normalized in a way that maps directly to relational storage and a REST API surface. AI is integrated as a first-class, human-in-the-loop capability with explicit approval flows, reflecting a thoughtful approach to trust and control in automated systems. The result is a polished, extensible SaaS foundation that communicates both product vision and engineering rigor — ready to evolve from a high-fidelity reference implementation into a fully integrated production platform.
+The design system is consistent and token-driven, components are reusable and composable, and the domain model is normalized in a way that maps directly to relational storage and a REST API surface. AI is integrated as a first-class, human-in-the-loop capability with explicit approval flows, reflecting a thoughtful approach to trust and control in automated systems. Combined with a clear scaling strategy from thousands to enterprise workloads, the result is a polished, extensible SaaS foundation that communicates both product vision and engineering rigor — ready to evolve from a high-fidelity reference implementation into a fully integrated production platform.
